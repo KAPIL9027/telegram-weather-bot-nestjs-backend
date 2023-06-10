@@ -20,12 +20,15 @@ export class TelegramBotService{
         const bot = new TelegramBot(token, {polling: true});
 
         this.cronScheduler(bot,cron,axios,apiKey);
+
+
         bot.onText(/\/subscribe (.+)/, async (msg:any, match:any) => {
             const resp = match[1]; // the captured "whatever"
             console.log(msg);
             const chatId = msg.chat.id;
             const name = msg.chat.first_name;
             try{
+
             console.log(resp);
             this.getWeatherData(axios,resp,apiKey).then((data)=>{
                 console.log(data);
@@ -41,7 +44,9 @@ export class TelegramBotService{
             const updateUser = await this.subscriptionModel.updateOne({chatId: currentUser.chatId},{city:resp});
             console.log(updateUser);
             }
+
             }
+            
             catch(e){
             console.log(e.message);
             bot.sendMessage(chatId,'Please write the command in the format of /subscribe [cityname]')}
